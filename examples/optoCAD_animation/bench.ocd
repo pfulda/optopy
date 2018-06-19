@@ -1,0 +1,14 @@
+# box to represent optical bench
+
+p    width=10., height=10., angle=0.
+c    h, width, height/2, height/2, 0.,  sc=1                 
+c    h, 0.0, height/2, height/2, 0.,  sc=1                 
+c    h, width/2, 0.0, width/2, 90.,  sc=1                 
+c    h, width/2, height, width/2, 90.,  sc=1                 
+
+# p    width=100., height=100.
+# c    h, width/2, 0.0, width/2, 90.,  sc=1                 
+# c    h, 0.0, width/2, width/2, 0.,  sc=1                 
+# c    h, height/2, 0.0, height/2, 90.,  sc=1                 
+# c    h, 0.0, height/2, height/2, 0.,  sc=1                 
+

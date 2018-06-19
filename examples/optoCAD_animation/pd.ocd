@@ -1,0 +1,4 @@
+# photodetector component file
+
+d  d,  0., 0.,  10.,  0.
++  d, dm=0., rd=6.4, c=0.150625, icc=14
