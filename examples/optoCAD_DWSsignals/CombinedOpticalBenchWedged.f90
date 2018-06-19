@@ -13,11 +13,11 @@
 !                          ac     x     y   rd    ag      c  m    # label'
                
 !	Reference laser input beam
-    ocd(01)='b                  83.325,  76.65, 1.,  z=-1000., ag=90.         # Ref laser'
+    ocd(01)='b                  83.325,  76.65, 1.2,  z=-1148., ag=90.         # Ref laser'
 !     ocd(02)='i    beamcond.ocd, 210., 84., 0. # Beam conditioner @30,20'
     
 ! Probe laser input beam    
-    ocd(02)='b                  165.6,  255.75, 1., z=-1000., ag=-90        # Probe laser'
+    ocd(02)='b                  165.6,  255.75, 1.2, z=-1000., ag=-90        # Probe laser'
 !     ocd(04)='i    beamcond.ocd, -20., 140., 0. # Beam conditioner @30,20'
 
 !Fiber collimators
@@ -33,6 +33,7 @@
 	ocd(09)='c d, 106.000, 197.000, 10.0, 0., sc=1 # PBSdump '
 ! W1
 	ocd(12)='d r, 124.600, 122.400, 10.0, -90.0 # W1 @-4,-10'
+
    ocd(13)=' +   d, dx=5.'
 ! HWP
 	ocd(14)='d t, 80.000, 190.000, 10.0, -90. #HWP @-20,-2'
@@ -41,7 +42,7 @@
 	ocd(16)='d srt, 83.325, 133.1008, 12.7, 135, 0., 1, r=0.5, t=0.5 # PO2 @-16,7'
 	ocd(17)='+    tt, dm=5., ag=-45.5 #PO2AR'
 ! Steering mirror 1
-	ocd(18)='d r, 81.00, 230.5456, 12.7, 135.530264, 0., 1, r=0.5, t=0.5 # SM1 @-16,7'
+	ocd(18)='d r, 81.00, 230.54560622, 12.7, 135.530263, 0., 1, r=0.5, t=0.5 # SM1 @-16,7'
 	ocd(19)='+    d, dm=6.'
 ! Interference beam splitter 1
 	ocd(20)='d srti(ntr)str, 123.65, 230.247, 12.7, 135.2150375, 0., 1, r=0.5, t=0.5 # BS1 @9,16'
@@ -67,7 +68,7 @@
 	ocd(43)='+    t, dx=2.35'
 
     ! Gouy phase telescope lens 2
-	ocd(44)='d t, 372., 229.203316, 12.7, 180.000, f=-50. # L2 @-1,18'
+	ocd(44)='d t, 371.5, 229.203316, 12.7, 180.000, f=-50. # L2 @-1,18'
 	ocd(45)='+    t, dx=2.35'
 
 	! Pick off mirror 3
@@ -79,7 +80,7 @@
 	ocd(49)='+    d, dm=6.35'
 	
 	! Gouy phase telescope lens 3
-	ocd(50)='d    t,  400.,  92.442, 12.7, 180., f=50. # L3 @-20,0'
+	ocd(50)='d    t,  400.,  91.645, 12.7, 180., f=50. # L3 @-20,0'
 	ocd(51)='+    t, dx=4.35'
 
 	! Steering mirror 5
@@ -87,15 +88,14 @@
 	ocd(53)='+    d, dm=6.35'
 	
 	! QPD 1
-	ocd(54)='i    qpd.ocd, 341.,  92.442, 180. # QPD1> @-4,-10'
-	
+	ocd(54)='i    qpd.ocd, 338.981,  91.645, 180. # QPD1> @-4,-10'
 	
 	! QPD 2
-	ocd(55)='i    qpd.ocd, 385.,  172.442, 180. # QPD2> @-4,-10'
+	ocd(55)='i    qpd.ocd, 385.695,  172., 180. # QPD2> @-4,-10'
 
     call oc_init('letter_p',unit='mm', psize=(/280. ,180./))     ! Initialize OPTOCAD (A4 portrait)
     call oc_frame(0.,0.,500.,300.,20.,20.,.5,ax='XY',gld=10.,fill=0)      ! Set up a frame
-    call oc_set(fslb=1.5,write='rs s2 act rd an2 w2t w2s C2t C2s z2t_9 z2s_9 w0t_9 w0s_9 Gp2 tpp_9 ipp ph pw lb',print='Gp2 lb')
+    call oc_set(fslb=1.5,write='rs s2 act rd an2 w2t w2s z2t_9 z2s_9 w0t_9 w0s_9 Gp2 tpp_9 ipp ph pw lb',print='Gp2t_9 lb')
     call oc_input(ocd,nib)       ! This reads the data of the optical components
 !
     lpba=ps_pattern('[30 10 8 10]0.')  ! Pattern for plotting the beam axis
