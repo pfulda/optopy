@@ -1,16 +1,101 @@
 import numpy as np
+import os
+import platform
+import re
+
 pi=np.pi
 
-def replace_lines(ocdfile,linenums,newlines):
+class ocd(object):
 	
-	fid=open(ocdfile,'r')
-	lines=fid.readlines()
-	fid.close()
+	def __init__(self,ocdfile=None):
+	
+		self.lines=None
+		self.source_file=None
+		self.output_file=None
+		self.data_files=None
 
-	for (newline,linenum) in zip(newlines,linenums):
-		lines[linenum-1]=newline+'\n'
+	# def save(self, filename=None):
+ #        """
+ #        Saves the current ocd object to a file. 
+ #        """
+ #        with open(filename,'w') as ocdfile:
+ #            ocdfile.writelines(ocd_lines)
 
-	return lines
+
+	def load_ocd_file(self,ocdfile=None):
+	
+		self.lines=None
+		fid=open(ocdfile+'.f90','r')
+		self.lines=fid.readlines()
+		fid.close()
+		self.source_file=ocdfile
+
+		# check for output data files specified in .f90
+
+		data_files=[]
+
+		for linenum,line in enumerate(self.lines):
+
+			if 'oc_trace' in line:
+		#         print('Found oc_trace in line {}'.format(linenum))
+				for wordnum,word in enumerate(re.split('\(|,|\)',line)):
+					if 'of' and '=' in word:
+						fname=re.findall(r'\'(.*?)\'', word)
+				if data_files==[]:
+					data_files=[fname[0]]
+				else:
+					data_files.append(fname[0])
+        
+		self.data_files=data_files  # list of output files is added to the ocd object.
+
+
+
+
+
+	def print_ocd_file(self):
+
+		for line in self.lines:
+			print(line)		
+
+
+	def replace_lines(self,linenums,newlines):
+	
+		for (newline,linenum) in zip(newlines,linenums):
+			self.lines[linenum]=newline+'\n'
+
+	def run_ocd_file(self,newocdfile=None,verbose=True):
+		
+		if newocdfile is None:
+			if self.output_file is None:
+				print('No output file given, running as temp.f90')
+				self.output_file='temp'
+			else:
+				print('Running as '+self.output_file+'.f90')
+		else:
+			self.output_file=newocdfile
+			print('Running as '+self.output_file+'.f90')
+
+
+		fid=open(self.output_file+'.f90','w')
+		for line in self.lines:
+			fid.write(line)
+		fid.close()
+	
+		stream = os.popen('occr '+self.output_file+'.f90')
+		output = stream.read()
+		
+		if platform.system() == "Darwin":
+			print('Converting from ps to pdf')
+			stream2 = os.popen('ps2pdf '+self.output_file+'.ps '+self.output_file+'.pdf ')
+			output2 = stream2.read()
+			print(output2)
+
+
+		if verbose:
+			print(output)
+			print(output2)
+
+		return output
 
 def hermite_polyval(x,n):
 
@@ -40,20 +125,20 @@ def unm(lam,qx,qy,x,y,n,m):
 
 def HGfield(lam, qs ,n ,m ,x ,y, offset):
  	
- 	xpoints=len(x);
-  	ypoints=len(y);
+	xpoints=len(x);
+	ypoints=len(y);
   
-  	field=np.zeros((ypoints,xpoints))
-  	field=field+0*1j
+	field=np.zeros((ypoints,xpoints))
+	field=field+0*1j
 
-  	x=x-offset[0];
-  	y=y-offset[1];
+	x=x-offset[0];
+	y=y-offset[1];
 
-  	for i, yval in enumerate(y):
+	for i, yval in enumerate(y):
   	
-  		field[i-1,:]=unm(lam,qs[0], qs[1], x, yval, n, m)
+		field[i-1,:]=unm(lam,qs[0], qs[1], x, yval, n, m)
 
-  	return field
+	return field
 
 def w0z_to_q(w0,z,lam):
 	
